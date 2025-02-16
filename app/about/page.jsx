@@ -70,7 +70,26 @@ const About = () => {
           </div>
         </div>
       </Section>
-
+      <Section>
+        <div className="max-w-4xl mx-auto p-7">
+          <h2 className="text-3xl font-bold mb-8 text-center">Skills</h2>
+          <div className="space-y-4">
+            {skills.map(({ name, level, color }) => (
+              <div key={name} className="flex items-center">
+                <span className="w-24 font-semibold">{name}</span>
+                <div className="flex-1 bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                  <motion.div
+                    className={`h-2.5 rounded-full ${color}`}
+                    initial={{ width: "0%" }}
+                    animate={{ width: `${level}%` }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
+                  ></motion.div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Section>
       <Section>
         <Tabs defaultValue="journey" className="mb-16 max-w-4xl mx-auto p-7">
           <TabsList className="grid grid-cols-2 md:grid-cols-4 bg-gray-900">
@@ -253,27 +272,6 @@ const About = () => {
             </Card>
           </TabsContent>
         </Tabs>
-      </Section>
-
-      <Section>
-        <div className="max-w-4xl mx-auto p-7">
-          <h2 className="text-3xl font-bold mb-8 text-center">Skills</h2>
-          <div className="space-y-4">
-            {skills.map(({ name, level, color }) => (
-              <div key={name} className="flex items-center">
-                <span className="w-24 font-semibold">{name}</span>
-                <div className="flex-1 bg-gray-200 rounded-full h-2.5 overflow-hidden">
-                  <motion.div
-                    className={`h-2.5 rounded-full ${color}`}
-                    initial={{ width: "0%" }}
-                    animate={{ width: `${level}%` }}
-                    transition={{ duration: 1.5, ease: "easeInOut" }}
-                  ></motion.div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </Section>
     </motion.section>
   );
