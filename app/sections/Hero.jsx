@@ -15,7 +15,7 @@ const Hero = () => {
 
   return (
     <motion.div
-      className="py-32 flex items-center justify-center text-white relative bg-black 100vh"
+      className="py-32 flex items-center justify-center text-white relative bg-black"
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
       onDragEnd={handleDragEnd} // Detect swipe

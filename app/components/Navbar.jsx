@@ -14,7 +14,7 @@ const Navbar = () => {
           { name: "Home", path: "/" },
           { name: "About", path: "/about" },
           { name: "Certificate", path: "/certificate" },
-          { name: "Projects", path: "/projects" },
+          { name: "Projects", path: "/project" },
         ].map(({ name, path }) => (
           <Link
             key={path}
