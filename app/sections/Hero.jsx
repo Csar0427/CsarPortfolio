@@ -34,7 +34,7 @@ const Hero = () => {
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          className="text-lg max-w-2xl m-auto"
+          className="text-sm max-w-2xl m-auto"
         >
           Web Designer | Developer | Basketball Player
         </motion.p>
