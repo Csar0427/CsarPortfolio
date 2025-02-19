@@ -27,6 +27,12 @@ body {
 .page-exit-active {
   transform: translateX(-100%);
 }
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+}
 
 @layer base {
   :root {
