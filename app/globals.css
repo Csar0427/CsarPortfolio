@@ -33,6 +33,9 @@ body {
   -ms-user-select: none;
   -moz-user-select: none;
 }
+body {
+  background-color: black;
+}
 
 @layer base {
   :root {
