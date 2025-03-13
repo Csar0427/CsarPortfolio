@@ -23,8 +23,8 @@ export default function RootLayout({ children }) {
   const handlers = useSwipeable({
     onSwipedLeft: () => navigateToNext(),
     onSwipedRight: () => navigateToPrev(),
-    preventScrollOnSwipe: true, // Stops vertical scrolling when swiping horizontally
-    trackMouse: true, // Also supports mouse dragging
+    preventScrollOnSwipe: true,
+    trackMouse: true,
   });
 
   // Define page order
@@ -47,12 +47,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        {...handlers} // Apply swipe event listeners
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        {...handlers}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <Navbar />
-        <div className="overflow-hidden">{children}</div>{" "}
-        {/* Prevents unwanted scroll */}
+        <main className="flex-grow">{children}</main>
         <Footer />
       </body>
     </html>
