@@ -1,4 +1,4 @@
-"use client"; // Required for client-side event handling
+"use client";
 import { Geist, Geist_Mono } from "next/font/google";
 import { useRouter } from "next/navigation";
 import { useSwipeable } from "react-swipeable";
@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
   });
 
   // Define page order
-  const pages = ["/", "/about", "/certificate", "/projects"];
+  const pages = ["/", "/about", "/certificate", "/project"];
 
   function navigateToNext() {
     const currentIndex = pages.indexOf(window.location.pathname);

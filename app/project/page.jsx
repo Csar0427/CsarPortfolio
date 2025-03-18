@@ -41,7 +41,7 @@ const mockRepos = [
     stargazers_count: 15,
     html_url: "https://github.com/AlnickClores/SystemMAR",
     homepage: "https://travelmugcafemenu.netlify.app/",
-    imageUrl: "/placeholder.svg?height=200&width=400",
+    imageUrl: "/Images/TravelMugCafe.png",
   },
   {
     id: 3,
@@ -51,7 +51,7 @@ const mockRepos = [
     stargazers_count: 5,
     html_url: "https://github.com/Csar0427/iEquity-Website/tree/iequity",
     homepage: "https://iequity-test.vercel.app/",
-    imageUrl: "/placeholder.svg?height=200&width=400",
+    imageUrl: "/Images/iEquity.png",
   },
 ];
 
