@@ -68,13 +68,25 @@ const CertificatesPage = () => {
     },
     {
       id: 5,
-      title: "JavaScript Algorithms",
-      issuer: "Coursera",
-      date: "March 2024",
-      image: "/placeholder.svg?height=200&width=300",
-      file: "/certificates/js_algorithms.pdf",
-      verifyUrl: "#",
+      title: "Introduction to web development",
+      issuer: "Microsoft",
+      date: "March 2025",
+      image: "/Images/microsoft.jpg",
+      file: "/certificates/IntroductionWebdevMicrosoft.pdf",
+      verifyUrl:
+        "https://www.coursera.org/account/accomplishments/verify/7BVEYNZUKG3V",
       color: "violet",
+    },
+    {
+      id: 6,
+      title: "Programming with javascript",
+      issuer: "Meta",
+      date: "March 2025",
+      image: "/Images/meta.jpg",
+      file: "/certificates/JavascriptIntro.pdf",
+      verifyUrl:
+        "https://www.coursera.org/account/accomplishments/verify/UVYL2XQYANQ8",
+      color: "yellow",
     },
   ];
 
