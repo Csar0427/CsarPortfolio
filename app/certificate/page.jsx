@@ -1,24 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Download, ExternalLink, Award, ChevronRight } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Download, ExternalLink, Award, X } from "lucide-react";
 
 const CertificatesPage = () => {
   const [theme, setTheme] = useState("dark");
-  const [activeCard, setActiveCard] = useState(null);
+  const [selectedCert, setSelectedCert] = useState(null);
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    // Get theme from localStorage or default to dark
     const savedTheme = localStorage.getItem("theme") || "dark";
     setTheme(savedTheme);
     document.body.className = savedTheme;
@@ -90,84 +83,74 @@ const CertificatesPage = () => {
     },
   ];
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.5 },
-    },
-  };
-
   const getColorClasses = (color) => {
     const colorMap = {
       cyan: {
         bg: "bg-cyan-500/10",
         border: "border-cyan-500/30",
         text: "text-cyan-400",
-        gradient: "from-cyan-500 to-cyan-600",
-        hover: "group-hover:border-cyan-500/50",
+        accent: "bg-cyan-500",
       },
       amber: {
         bg: "bg-amber-500/10",
         border: "border-amber-500/30",
         text: "text-amber-400",
-        gradient: "from-amber-500 to-amber-600",
-        hover: "group-hover:border-amber-500/50",
+        accent: "bg-amber-500",
       },
       emerald: {
         bg: "bg-emerald-500/10",
         border: "border-emerald-500/30",
         text: "text-emerald-400",
-        gradient: "from-emerald-500 to-emerald-600",
-        hover: "group-hover:border-emerald-500/50",
+        accent: "bg-emerald-500",
       },
       rose: {
         bg: "bg-rose-500/10",
         border: "border-rose-500/30",
         text: "text-rose-400",
-        gradient: "from-rose-500 to-rose-600",
-        hover: "group-hover:border-rose-500/50",
+        accent: "bg-rose-500",
       },
       violet: {
         bg: "bg-violet-500/10",
         border: "border-violet-500/30",
         text: "text-violet-400",
-        gradient: "from-violet-500 to-violet-600",
-        hover: "group-hover:border-violet-500/50",
+        accent: "bg-violet-500",
+      },
+      yellow: {
+        bg: "bg-yellow-500/10",
+        border: "border-yellow-500/30",
+        text: "text-yellow-400",
+        accent: "bg-yellow-500",
       },
     };
 
     return colorMap[color] || colorMap.cyan;
   };
 
+  const handleCertClick = (cert) => {
+    setSelectedCert(cert);
+  };
+
+  const closeModal = () => {
+    setSelectedCert(null);
+  };
+
   return (
     <div className={`min-h-screen ${theme}`}>
-      <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-20 px-4 md:px-8">
-        {/* Background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-cyan-500/10 blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-amber-500/10 blur-3xl"></div>
+      <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-12 px-4 md:px-8 min-h-screen">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 25px 25px, white 2%, transparent 0%), 
+                              radial-gradient(circle at 75px 75px, white 2%, transparent 0%)`,
+              backgroundSize: "100px 100px",
+            }}
+          ></div>
         </div>
 
-        <div className="container mx-auto relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-16 text-center"
-          >
+        <div className="container mx-auto relative z-10 max-w-7xl">
+          <div className="mb-12 text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-amber-400 bg-clip-text text-transparent inline-block">
               Certificates & Achievements
             </h1>
@@ -176,122 +159,161 @@ const CertificatesPage = () => {
               A collection of certifications that showcase my continuous
               learning journey and technical expertise.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            {certificates.map((cert) => {
+          {/* Timeline-inspired layout */}
+          <div className="relative" ref={containerRef}>
+            {/* Center line */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-cyan-500 via-amber-500 to-violet-500 rounded-full"></div>
+
+            {certificates.map((cert, index) => {
               const colorClasses = getColorClasses(cert.color);
+              const isEven = index % 2 === 0;
 
               return (
-                <motion.div
+                <div
                   key={cert.id}
-                  variants={itemVariants}
-                  onMouseEnter={() => setActiveCard(cert.id)}
-                  onMouseLeave={() => setActiveCard(null)}
-                  className="group"
+                  className={`relative mb-16 flex items-center ${
+                    isEven ? "flex-row" : "flex-row-reverse"
+                  } md:flex-row-reverse md:even:flex-row`}
                 >
-                  <Card
-                    className={`bg-black/40 backdrop-blur-xl ${colorClasses.bg} border ${colorClasses.border} ${colorClasses.hover} transition-all duration-300 h-full flex flex-col`}
+                  {/* Timeline dot */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
+                    <div
+                      className={`w-5 h-5 rounded-full ${colorClasses.accent} border-4 border-slate-900`}
+                    ></div>
+                  </div>
+
+                  {/* Content */}
+                  <div
+                    className={`w-full md:w-[calc(50%-2rem)] ${
+                      isEven ? "pr-8 md:pr-0 md:pl-8" : "pl-8 md:pl-0 md:pr-8"
+                    }`}
                   >
-                    <CardHeader className="pb-2">
-                      <div className="flex items-center gap-2">
-                        <div className={`p-1.5 rounded-md ${colorClasses.bg}`}>
-                          <Award className={`h-4 w-4 ${colorClasses.text}`} />
-                        </div>
-                        <CardTitle className="text-xl font-bold text-white">
-                          {cert.title}
-                        </CardTitle>
-                      </div>
-                    </CardHeader>
-
-                    <CardContent className="space-y-4 flex-grow">
-                      <div
-                        className={`relative aspect-[3/2] overflow-hidden rounded-lg border ${colorClasses.border} transition-all duration-300`}
-                      >
-                        <Image
-                          src={cert.image || "/placeholder.svg"}
-                          alt={cert.title}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-
-                        {/* Overlay gradient */}
-                        <div
-                          className={`absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-                        ></div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`text-sm font-medium ${colorClasses.text}`}
+                    <Card
+                      className={`bg-black/40 backdrop-blur-sm border ${colorClasses.border} hover:border-opacity-50 transition-colors cursor-pointer`}
+                      onClick={() => handleCertClick(cert)}
+                    >
+                      <CardContent className="p-5">
+                        <div className="flex items-start gap-4">
+                          <div
+                            className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border ${colorClasses.border}`}
                           >
-                            Issued by:
-                          </span>
-                          <span className="text-sm text-gray-300">
-                            {cert.issuer}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`text-sm font-medium ${colorClasses.text}`}
-                          >
-                            Date:
-                          </span>
-                          <span className="text-sm text-gray-300">
-                            {cert.date}
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
+                            <Image
+                              src={cert.image || "/placeholder.svg"}
+                              alt={cert.title}
+                              fill
+                              className="object-cover"
+                              sizes="64px"
+                            />
+                          </div>
 
-                    <CardFooter className="flex gap-4 pt-2">
-                      <a href={cert.file} download className="flex-1">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className={`w-full bg-transparent border-${cert.color}-500/50 hover:bg-gradient-to-r hover:${colorClasses.gradient} hover:text-white group transition-all duration-300`}
-                        >
-                          <Download className="mr-2 h-4 w-4" />
-                          <span>Download</span>
-                          <ChevronRight
-                            size={14}
-                            className="ml-1 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
-                          />
-                        </Button>
-                      </a>
-                      <a
-                        href={cert.verifyUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1"
-                      >
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className={`w-full bg-transparent border-${cert.color}-500/50 hover:bg-gradient-to-r hover:${colorClasses.gradient} hover:text-white group transition-all duration-300`}
-                        >
-                          <ExternalLink className="mr-2 h-4 w-4" />
-                          <span>Verify</span>
-                          <ChevronRight
-                            size={14}
-                            className="ml-1 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
-                          />
-                        </Button>
-                      </a>
-                    </CardFooter>
-                  </Card>
-                </motion.div>
+                          <div className="flex-grow">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Award
+                                className={`h-4 w-4 ${colorClasses.text}`}
+                              />
+                              <h3 className="text-lg font-bold text-white">
+                                {cert.title}
+                              </h3>
+                            </div>
+                            <div className="text-sm text-gray-300">
+                              <span className={colorClasses.text}>
+                                {cert.issuer}
+                              </span>{" "}
+                              • {cert.date}
+                            </div>
+                            <div className="mt-2 text-xs text-gray-400">
+                              Click to view details
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
               );
             })}
-          </motion.div>
+          </div>
         </div>
       </div>
+
+      {/* Modal for certificate details */}
+      {selectedCert && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div
+            className="relative bg-slate-900 border border-slate-700 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white z-10"
+            >
+              <X size={24} />
+            </button>
+
+            <div className="p-6">
+              <div className="relative w-full aspect-[3/2] mb-6 rounded-lg overflow-hidden">
+                <Image
+                  src={selectedCert.image || "/placeholder.svg"}
+                  alt={selectedCert.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 600px"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60"></div>
+                <div className="absolute bottom-0 left-0 p-4">
+                  <h2 className="text-2xl font-bold text-white">
+                    {selectedCert.title}
+                  </h2>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-400">Issuer</p>
+                    <p className="text-white">{selectedCert.issuer}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-400">Date</p>
+                    <p className="text-white">{selectedCert.date}</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4 pt-4">
+                  <a href={selectedCert.file} download className="flex-1">
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 transition-opacity"
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      <span>Download</span>
+                    </Button>
+                  </a>
+                  <a
+                    href={selectedCert.verifyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1"
+                  >
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full border-gray-600 hover:bg-gray-800 transition-colors"
+                    >
+                      <ExternalLink className="mr-2 h-4 w-4" />
+                      <span>Verify</span>
+                    </Button>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
