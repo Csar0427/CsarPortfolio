@@ -30,7 +30,7 @@ const mockRepos = [
     language: "react",
     stargazers_count: 10,
     html_url: "https://github.com/Csar0427/ToDoList",
-    homepage: "https://project1demo.com",
+    homepage: "https://to-do-list-zeta-azure-60.vercel.app/",
     imageUrl: "/placeholder.svg?height=200&width=400",
   },
   {
