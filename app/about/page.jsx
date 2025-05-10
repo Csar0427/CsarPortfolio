@@ -133,7 +133,7 @@ const About = () => {
                   className="flex gap-4"
                 >
                   <a
-                    href="https://www.linkedin.com/in/jerome-cesar-1a26a12ba/"
+                    href="https://www.linkedin.com/in/jerome-cesar-aguas/"
                     className="group flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 transition-all"
                   >
                     <Linkedin size={18} />
