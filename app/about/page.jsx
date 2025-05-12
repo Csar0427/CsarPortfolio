@@ -1,28 +1,140 @@
 "use client";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Code,
-  GraduationCap,
-  Heart,
-  Briefcase,
-  Linkedin,
-  Github,
-  Twitter,
-  ChevronRight,
-} from "lucide-react";
+import React from "react";
 
+// Simplified skills array without levels
 const skills = [
-  { name: "JavaScript", level: 90, color: "bg-amber-400" },
-  { name: "React", level: 85, color: "bg-cyan-500" },
-  { name: "Shooting", level: 95, color: "bg-emerald-500" },
-  { name: "CSS", level: 80, color: "bg-rose-500" },
-  { name: "Python", level: 50, color: "bg-violet-500" },
+  { name: "JavaScript", color: "#FBBF24", icon: "JS" },
+  { name: "React", color: "#0EA5E9", icon: "R" },
+  { name: "Shooting", color: "#10B981", icon: "🏀" },
+  { name: "CSS", color: "#F43F5E", icon: "CSS" },
+  { name: "Python", color: "#8B5CF6", icon: "Py" },
 ];
+
+// Custom icons (replace with your own if needed)
+const Icons = {
+  Linkedin: () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+      <rect x="2" y="9" width="4" height="12"></rect>
+      <circle cx="4" cy="4" r="2"></circle>
+    </svg>
+  ),
+  Github: () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+    </svg>
+  ),
+  ChevronRight: () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  ),
+  Briefcase: () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+    </svg>
+  ),
+  Code: () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="16 18 22 12 16 6"></polyline>
+      <polyline points="8 6 2 12 8 18"></polyline>
+    </svg>
+  ),
+  GraduationCap: () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+      <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path>
+    </svg>
+  ),
+  Heart: () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+    </svg>
+  ),
+};
+
+// Custom Badge component
+const Badge = ({ children, className }) => (
+  <span
+    className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${className}`}
+  >
+    {children}
+  </span>
+);
 
 const Section = ({ children }) => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -38,6 +150,58 @@ const Section = ({ children }) => {
       {children}
     </motion.div>
   );
+};
+
+// Custom Tab components
+const Tabs = ({ defaultValue, children, className }) => {
+  const [activeTab, setActiveTab] = useState(defaultValue);
+
+  // Clone children and pass activeTab state
+  const childrenWithProps = React.Children.map(children, (child) => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { activeTab, setActiveTab });
+    }
+    return child;
+  });
+
+  return <div className={className}>{childrenWithProps}</div>;
+};
+
+const TabsList = ({ children, className, activeTab, setActiveTab }) => {
+  // Clone children and pass activeTab state
+  const childrenWithProps = React.Children.map(children, (child) => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { activeTab, setActiveTab });
+    }
+    return child;
+  });
+
+  return <div className={className}>{childrenWithProps}</div>;
+};
+
+const TabsTrigger = ({
+  value,
+  className,
+  children,
+  activeTab,
+  setActiveTab,
+}) => {
+  const isActive = activeTab === value;
+
+  return (
+    <button
+      className={`${className} ${isActive ? "data-[state=active]" : ""}`}
+      onClick={() => setActiveTab(value)}
+    >
+      {children}
+    </button>
+  );
+};
+
+const TabsContent = ({ value, className, children, activeTab }) => {
+  if (activeTab !== value) return null;
+
+  return <div className={className}>{children}</div>;
 };
 
 const About = () => {
@@ -102,10 +266,10 @@ const About = () => {
                     transition={{ delay: 0.3, duration: 0.5 }}
                   >
                     <div className="flex items-center gap-3 mb-4">
-                      <Badge className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/50 px-3 py-1 rounded-full">
+                      <Badge className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/50">
                         Front-end Developer
                       </Badge>
-                      <Badge className="bg-amber-500/20 text-amber-400 border border-amber-500/50 px-3 py-1 rounded-full">
+                      <Badge className="bg-amber-500/20 text-amber-400 border border-amber-500/50">
                         Malabon City
                       </Badge>
                     </div>
@@ -136,23 +300,21 @@ const About = () => {
                     href="https://www.linkedin.com/in/jerome-cesar-aguas/"
                     className="group flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 transition-all"
                   >
-                    <Linkedin size={18} />
+                    <Icons.Linkedin />
                     <span>LinkedIn</span>
-                    <ChevronRight
-                      size={16}
-                      className="opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all"
-                    />
+                    <span className="opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all">
+                      <Icons.ChevronRight />
+                    </span>
                   </a>
                   <a
                     href="https://github.com/Csar0427"
                     className="group flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 border border-slate-600 transition-all"
                   >
-                    <Github size={18} />
+                    <Icons.Github />
                     <span>GitHub</span>
-                    <ChevronRight
-                      size={16}
-                      className="opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all"
-                    />
+                    <span className="opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all">
+                      <Icons.ChevronRight />
+                    </span>
                   </a>
                 </motion.div>
               </div>
@@ -167,60 +329,208 @@ const About = () => {
               <div className="h-1 w-20 bg-gradient-to-r from-cyan-500 to-amber-500 rounded-full"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-8">
-                {skills.map((skill, index) => (
+            {/* Custom Skills Visualization */}
+            <div className="relative w-full overflow-hidden rounded-2xl bg-black/40 backdrop-blur-xl border border-gray-800 p-8">
+              {/* Background gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-amber-500/10 rounded-2xl blur-3xl -z-10"></div>
+
+              {/* Animated background elements */}
+              <div className="absolute inset-0 overflow-hidden">
+                {/* Floating particles */}
+                {Array.from({ length: 20 }).map((_, i) => (
                   <motion.div
-                    key={skill.name}
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                    className="relative"
-                    onMouseEnter={() => setActiveSkill(skill.name)}
-                    onMouseLeave={() => setActiveSkill(null)}
-                  >
-                    <div className="flex justify-between mb-2">
-                      <span className="font-semibold text-lg">
-                        {skill.name}
-                      </span>
-                      <span className="font-mono">{skill.level}%</span>
-                    </div>
-                    <div className="h-3 w-full bg-gray-700 rounded-full overflow-hidden">
-                      <motion.div
-                        className={`h-full rounded-full ${skill.color}`}
-                        initial={{ width: "0%" }}
-                        animate={{ width: `${skill.level}%` }}
-                        transition={{ duration: 1.5, ease: "easeInOut" }}
-                      ></motion.div>
-                    </div>
-                    <AnimatePresence>
-                      {activeSkill === skill.name && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          className="absolute -right-4 top-0 w-2 h-2 rounded-full bg-white"
-                        />
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
+                    key={`particle-${i}`}
+                    className="absolute rounded-full"
+                    style={{
+                      width: Math.random() * 4 + 1 + "px",
+                      height: Math.random() * 4 + 1 + "px",
+                      background: `rgba(255, 255, 255, ${
+                        Math.random() * 0.2 + 0.1
+                      })`,
+                    }}
+                    initial={{
+                      x: Math.random() * 100 + "%",
+                      y: Math.random() * 100 + "%",
+                    }}
+                    animate={{
+                      x: [
+                        Math.random() * 100 + "%",
+                        Math.random() * 100 + "%",
+                        Math.random() * 100 + "%",
+                      ],
+                      y: [
+                        Math.random() * 100 + "%",
+                        Math.random() * 100 + "%",
+                        Math.random() * 100 + "%",
+                      ],
+                    }}
+                    transition={{
+                      duration: 10 + Math.random() * 20,
+                      repeat: Number.POSITIVE_INFINITY,
+                      repeatType: "reverse",
+                    }}
+                  />
+                ))}
+
+                {/* Animated gradient lines */}
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <motion.div
+                    key={`line-${i}`}
+                    className="absolute h-px w-40 md:w-60 opacity-20"
+                    style={{
+                      background: `linear-gradient(90deg, transparent, ${
+                        skills[i % skills.length].color
+                      }, transparent)`,
+                      left: `${Math.random() * 80 + 10}%`,
+                      top: `${Math.random() * 80 + 10}%`,
+                      transform: `rotate(${Math.random() * 360}deg)`,
+                    }}
+                    animate={{
+                      opacity: [0.1, 0.3, 0.1],
+                      width: ["10%", "30%", "10%"],
+                    }}
+                    transition={{
+                      duration: 5 + Math.random() * 5,
+                      repeat: Number.POSITIVE_INFINITY,
+                      repeatType: "reverse",
+                    }}
+                  />
                 ))}
               </div>
 
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-amber-500/20 rounded-2xl blur-3xl"></div>
-                <Card className="relative bg-black/40 backdrop-blur-xl border-gray-800 rounded-2xl overflow-hidden h-full">
-                  <div className="p-6 h-full flex flex-col justify-center">
-                    <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-amber-400 bg-clip-text text-transparent">
+                <h3 className="text-2xl font-bold mb-10 bg-gradient-to-r from-cyan-400 to-amber-400 bg-clip-text text-transparent">
+                  My Technical Toolkit
+                </h3>
+
+                {/* Crystal Prism Skills Visualization */}
+                <div className="flex flex-wrap justify-center gap-8 md:gap-12 mb-12">
+                  {skills.map((skill, index) => (
+                    <motion.div
+                      key={skill.name}
+                      className="relative"
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
+                      whileHover={{ y: -10 }}
+                    >
+                      {/* Crystal container */}
+                      <div className="relative perspective-800">
+                        <motion.div
+                          className="relative w-32 h-32 transform-style-3d"
+                          animate={{
+                            rotateY: [0, 10, 0, -10, 0],
+                            rotateX: [0, 5, 0, -5, 0],
+                          }}
+                          transition={{
+                            duration: 10,
+                            repeat: Number.POSITIVE_INFINITY,
+                            repeatType: "loop",
+                          }}
+                        >
+                          {/* Crystal faces */}
+                          <div
+                            className="absolute inset-0 transform-gpu"
+                            style={{
+                              background: `linear-gradient(135deg, ${skill.color}20, ${skill.color}40)`,
+                              backdropFilter: "blur(8px)",
+                              clipPath:
+                                "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+                              boxShadow: `0 0 20px ${skill.color}30, inset 0 0 20px ${skill.color}20`,
+                              border: `1px solid ${skill.color}50`,
+                            }}
+                          >
+                            {/* Skill icon */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="text-3xl font-bold text-white">
+                                {skill.icon}
+                              </div>
+                            </div>
+
+                            {/* Light reflection */}
+                            <div
+                              className="absolute inset-0 opacity-50"
+                              style={{
+                                background: `linear-gradient(45deg, transparent 40%, ${skill.color}60 45%, ${skill.color}80 50%, ${skill.color}60 55%, transparent 60%)`,
+                                animation: "shine 5s infinite linear",
+                              }}
+                            ></div>
+                          </div>
+
+                          {/* Bottom reflection */}
+                          <div
+                            className="absolute w-full h-4 bottom-0 transform translate-y-full opacity-30 blur-sm"
+                            style={{
+                              background: `radial-gradient(ellipse at center, ${skill.color} 0%, transparent 70%)`,
+                            }}
+                          ></div>
+                        </motion.div>
+                      </div>
+
+                      {/* Skill name */}
+                      <motion.div
+                        className="mt-4 text-center"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5 + index * 0.1 }}
+                      >
+                        <div className="font-bold text-lg text-white">
+                          {skill.name}
+                        </div>
+                      </motion.div>
+
+                      {/* Animated particles around crystal */}
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <motion.div
+                          key={`skill-particle-${index}-${i}`}
+                          className="absolute w-1 h-1 rounded-full"
+                          style={{ background: skill.color }}
+                          initial={{
+                            x: 0,
+                            y: 0,
+                            opacity: 0,
+                          }}
+                          animate={{
+                            x: [0, (Math.random() - 0.5) * 60],
+                            y: [0, (Math.random() - 0.5) * 60],
+                            opacity: [0, 0.8, 0],
+                          }}
+                          transition={{
+                            duration: 2 + Math.random() * 2,
+                            repeat: Number.POSITIVE_INFINITY,
+                            repeatType: "loop",
+                            delay: i * 0.5,
+                          }}
+                        />
+                      ))}
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Philosophy section */}
+                <motion.div
+                  className="relative p-6 rounded-xl overflow-hidden"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
+                >
+                  {/* Animated background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-amber-500/20 rounded-xl -z-10"></div>
+                  <div className="absolute inset-0 backdrop-blur-sm border border-white/10 rounded-xl -z-10"></div>
+
+                  {/* Content */}
+                  <div className="relative z-10">
+                    <div className="font-bold text-xl text-white mb-3">
                       My Development Philosophy
-                    </h3>
+                    </div>
                     <p className="text-gray-300 mb-6">
                       I believe in creating intuitive, accessible, and
                       performant web experiences. My approach combines technical
                       expertise with creative problem-solving to build solutions
                       that not only work flawlessly but also delight users.
                     </p>
-                    <div className="grid grid-cols-3 gap-3">
+
+                    <div className="flex flex-wrap gap-3">
                       {[
                         "User-Centric",
                         "Clean Code",
@@ -228,17 +538,21 @@ const About = () => {
                         "Accessible",
                         "Performant",
                         "Innovative",
-                      ].map((value) => (
-                        <Badge
+                      ].map((value, i) => (
+                        <motion.div
                           key={value}
-                          className="bg-white/10 hover:bg-white/20 text-white py-1.5 justify-center transition-all"
+                          className="bg-white/10 hover:bg-white/20 text-white py-1.5 px-3 rounded-md text-center text-sm transition-all"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 1 + i * 0.1 }}
+                          whileHover={{ scale: 1.05 }}
                         >
                           {value}
-                        </Badge>
+                        </motion.div>
                       ))}
                     </div>
                   </div>
-                </Card>
+                </motion.div>
               </div>
             </div>
           </Section>
@@ -255,25 +569,25 @@ const About = () => {
               <TabsList className="w-full grid grid-cols-2 md:grid-cols-4 bg-black/40 backdrop-blur-md rounded-xl p-1 mb-8">
                 <TabsTrigger
                   value="journey"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500/20 data-[state=active]:to-cyan-500/20 data-[state=active]:text-cyan-400 rounded-lg transition-all"
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500/20 data-[state=active]:to-cyan-500/20 data-[state=active]:text-cyan-400 rounded-lg transition-all py-2"
                 >
                   My Journey
                 </TabsTrigger>
                 <TabsTrigger
                   value="expertise"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500/20 data-[state=active]:to-amber-500/20 data-[state=active]:text-amber-400 rounded-lg transition-all"
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500/20 data-[state=active]:to-amber-500/20 data-[state=active]:text-amber-400 rounded-lg transition-all py-2"
                 >
                   Expertise
                 </TabsTrigger>
                 <TabsTrigger
                   value="education"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500/20 data-[state=active]:to-emerald-500/20 data-[state=active]:text-emerald-400 rounded-lg transition-all"
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500/20 data-[state=active]:to-emerald-500/20 data-[state=active]:text-emerald-400 rounded-lg transition-all py-2"
                 >
                   Education
                 </TabsTrigger>
                 <TabsTrigger
                   value="personal"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-500/20 data-[state=active]:to-rose-500/20 data-[state=active]:text-rose-400 rounded-lg transition-all"
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-500/20 data-[state=active]:to-rose-500/20 data-[state=active]:text-rose-400 rounded-lg transition-all py-2"
                 >
                   Personal
                 </TabsTrigger>
@@ -283,11 +597,11 @@ const About = () => {
                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-amber-500/10 to-emerald-500/10 rounded-2xl blur-3xl"></div>
 
                 <TabsContent value="journey" className="mt-0">
-                  <Card className="bg-black/40 backdrop-blur-xl border-gray-800 rounded-2xl overflow-hidden">
+                  <div className="bg-black/40 backdrop-blur-xl border border-gray-800 rounded-2xl overflow-hidden">
                     <div className="p-8">
                       <div className="flex items-center gap-3 mb-8">
                         <div className="p-2 rounded-lg bg-cyan-500/20">
-                          <Briefcase className="w-6 h-6 text-cyan-400" />
+                          <Icons.Briefcase className="w-6 h-6 text-cyan-400" />
                         </div>
                         <h3 className="text-2xl font-bold text-white">
                           My Development Journey
@@ -341,15 +655,15 @@ const About = () => {
                         </div>
                       </div>
                     </div>
-                  </Card>
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="expertise" className="mt-0">
-                  <Card className="bg-black/40 backdrop-blur-xl border-gray-800 rounded-2xl overflow-hidden">
+                  <div className="bg-black/40 backdrop-blur-xl border border-gray-800 rounded-2xl overflow-hidden">
                     <div className="p-8">
                       <div className="flex items-center gap-3 mb-8">
                         <div className="p-2 rounded-lg bg-amber-500/20">
-                          <Code className="w-6 h-6 text-amber-400" />
+                          <Icons.Code className="w-6 h-6 text-amber-400" />
                         </div>
                         <h3 className="text-2xl font-bold text-white">
                           Technical Skills
@@ -440,15 +754,15 @@ const About = () => {
                         </div>
                       </div>
                     </div>
-                  </Card>
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="education" className="mt-0">
-                  <Card className="bg-black/40 backdrop-blur-xl border-gray-800 rounded-2xl overflow-hidden">
+                  <div className="bg-black/40 backdrop-blur-xl border border-gray-800 rounded-2xl overflow-hidden">
                     <div className="p-8">
                       <div className="flex items-center gap-3 mb-8">
                         <div className="p-2 rounded-lg bg-emerald-500/20">
-                          <GraduationCap className="w-6 h-6 text-emerald-400" />
+                          <Icons.GraduationCap className="w-6 h-6 text-emerald-400" />
                         </div>
                         <h3 className="text-2xl font-bold text-white">
                           Education
@@ -533,15 +847,15 @@ const About = () => {
                         </div>
                       </div>
                     </div>
-                  </Card>
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="personal" className="mt-0">
-                  <Card className="bg-black/40 backdrop-blur-xl border-gray-800 rounded-2xl overflow-hidden">
+                  <div className="bg-black/40 backdrop-blur-xl border border-gray-800 rounded-2xl overflow-hidden">
                     <div className="p-8">
                       <div className="flex items-center gap-3 mb-8">
                         <div className="p-2 rounded-lg bg-rose-500/20">
-                          <Heart className="w-6 h-6 text-rose-400" />
+                          <Icons.Heart className="w-6 h-6 text-rose-400" />
                         </div>
                         <h3 className="text-2xl font-bold text-white">
                           Personal Interests
@@ -616,13 +930,37 @@ const About = () => {
                         </div>
                       </div>
                     </div>
-                  </Card>
+                  </div>
                 </TabsContent>
               </div>
             </Tabs>
           </Section>
         </div>
       </div>
+
+      {/* CSS for animations */}
+      <style jsx global>{`
+        @keyframes shine {
+          0% {
+            background-position: -100% 0;
+          }
+          100% {
+            background-position: 200% 0;
+          }
+        }
+
+        .perspective-800 {
+          perspective: 800px;
+        }
+
+        .transform-style-3d {
+          transform-style: preserve-3d;
+        }
+
+        .transform-gpu {
+          transform: translateZ(0);
+        }
+      `}</style>
     </div>
   );
 };
