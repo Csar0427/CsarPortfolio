@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import React from "react";
 
 // Simplified skills array without levels
 const skills = [
@@ -152,61 +151,10 @@ const Section = ({ children }) => {
   );
 };
 
-// Custom Tab components
-const Tabs = ({ defaultValue, children, className }) => {
-  const [activeTab, setActiveTab] = useState(defaultValue);
-
-  // Clone children and pass activeTab state
-  const childrenWithProps = React.Children.map(children, (child) => {
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, { activeTab, setActiveTab });
-    }
-    return child;
-  });
-
-  return <div className={className}>{childrenWithProps}</div>;
-};
-
-const TabsList = ({ children, className, activeTab, setActiveTab }) => {
-  // Clone children and pass activeTab state
-  const childrenWithProps = React.Children.map(children, (child) => {
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, { activeTab, setActiveTab });
-    }
-    return child;
-  });
-
-  return <div className={className}>{childrenWithProps}</div>;
-};
-
-const TabsTrigger = ({
-  value,
-  className,
-  children,
-  activeTab,
-  setActiveTab,
-}) => {
-  const isActive = activeTab === value;
-
-  return (
-    <button
-      className={`${className} ${isActive ? "data-[state=active]" : ""}`}
-      onClick={() => setActiveTab(value)}
-    >
-      {children}
-    </button>
-  );
-};
-
-const TabsContent = ({ value, className, children, activeTab }) => {
-  if (activeTab !== value) return null;
-
-  return <div className={className}>{children}</div>;
-};
-
 const About = () => {
   const [theme, setTheme] = useState("dark");
   const [activeSkill, setActiveSkill] = useState(null);
+  const [activeTab, setActiveTab] = useState("journey");
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -565,282 +513,309 @@ const About = () => {
               <div className="h-1 w-20 bg-gradient-to-r from-cyan-500 to-amber-500 rounded-full"></div>
             </div>
 
-            <Tabs defaultValue="journey" className="w-full">
-              <TabsList className="w-full grid grid-cols-2 md:grid-cols-4 bg-black/40 backdrop-blur-md rounded-xl p-1 mb-8">
-                <TabsTrigger
-                  value="journey"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-500/20 data-[state=active]:to-cyan-500/20 data-[state=active]:text-cyan-400 rounded-lg transition-all py-2"
+            {/* Fixed Tabs Implementation */}
+            <div className="w-full">
+              {/* Tab Navigation */}
+              <div className="w-full grid grid-cols-2 md:grid-cols-4 bg-black/40 backdrop-blur-md rounded-xl p-1 mb-8">
+                <button
+                  onClick={() => setActiveTab("journey")}
+                  className={`py-2 px-4 rounded-lg transition-all ${
+                    activeTab === "journey"
+                      ? "bg-gradient-to-r from-cyan-500/20 to-cyan-500/20 text-cyan-400"
+                      : "text-gray-400 hover:text-gray-300"
+                  }`}
                 >
                   My Journey
-                </TabsTrigger>
-                <TabsTrigger
-                  value="expertise"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500/20 data-[state=active]:to-amber-500/20 data-[state=active]:text-amber-400 rounded-lg transition-all py-2"
+                </button>
+                <button
+                  onClick={() => setActiveTab("expertise")}
+                  className={`py-2 px-4 rounded-lg transition-all ${
+                    activeTab === "expertise"
+                      ? "bg-gradient-to-r from-amber-500/20 to-amber-500/20 text-amber-400"
+                      : "text-gray-400 hover:text-gray-300"
+                  }`}
                 >
                   Expertise
-                </TabsTrigger>
-                <TabsTrigger
-                  value="education"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500/20 data-[state=active]:to-emerald-500/20 data-[state=active]:text-emerald-400 rounded-lg transition-all py-2"
+                </button>
+                <button
+                  onClick={() => setActiveTab("education")}
+                  className={`py-2 px-4 rounded-lg transition-all ${
+                    activeTab === "education"
+                      ? "bg-gradient-to-r from-emerald-500/20 to-emerald-500/20 text-emerald-400"
+                      : "text-gray-400 hover:text-gray-300"
+                  }`}
                 >
                   Education
-                </TabsTrigger>
-                <TabsTrigger
-                  value="personal"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rose-500/20 data-[state=active]:to-rose-500/20 data-[state=active]:text-rose-400 rounded-lg transition-all py-2"
+                </button>
+                <button
+                  onClick={() => setActiveTab("personal")}
+                  className={`py-2 px-4 rounded-lg transition-all ${
+                    activeTab === "personal"
+                      ? "bg-gradient-to-r from-rose-500/20 to-rose-500/20 text-rose-400"
+                      : "text-gray-400 hover:text-gray-300"
+                  }`}
                 >
                   Personal
-                </TabsTrigger>
-              </TabsList>
+                </button>
+              </div>
 
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-amber-500/10 to-emerald-500/10 rounded-2xl blur-3xl"></div>
 
-                <TabsContent value="journey" className="mt-0">
-                  <div className="bg-black/40 backdrop-blur-xl border border-gray-800 rounded-2xl overflow-hidden">
-                    <div className="p-8">
-                      <div className="flex items-center gap-3 mb-8">
-                        <div className="p-2 rounded-lg bg-cyan-500/20">
-                          <Icons.Briefcase className="w-6 h-6 text-cyan-400" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-white">
-                          My Development Journey
-                        </h3>
-                      </div>
-
-                      <div className="space-y-12 relative">
-                        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-cyan-500 via-amber-500 to-emerald-500"></div>
-
-                        <div className="relative pl-12">
-                          <div className="absolute left-0 w-8 h-8 rounded-full bg-cyan-500/20 border-2 border-cyan-500 flex items-center justify-center">
-                            <div className="w-2 h-2 rounded-full bg-cyan-500"></div>
+                {/* Journey Tab Content */}
+                {activeTab === "journey" && (
+                  <div className="mt-0">
+                    <div className="bg-black/40 backdrop-blur-xl border border-gray-800 rounded-2xl overflow-hidden">
+                      <div className="p-8">
+                        <div className="flex items-center gap-3 mb-8">
+                          <div className="p-2 rounded-lg bg-cyan-500/20">
+                            <Icons.Briefcase className="w-6 h-6 text-cyan-400" />
                           </div>
-                          <div className="font-bold text-xl text-white mb-2">
-                            Beginning of the Journey
-                          </div>
-                          <p className="text-gray-300">
-                            Started with HTML and CSS, building simple websites
-                            and discovering the joy of creating things for the
-                            web. My curiosity led me to explore more complex
-                            technologies and frameworks.
-                          </p>
+                          <h3 className="text-2xl font-bold text-white">
+                            My Development Journey
+                          </h3>
                         </div>
 
-                        <div className="relative pl-12">
-                          <div className="absolute left-0 w-8 h-8 rounded-full bg-amber-500/20 border-2 border-amber-500 flex items-center justify-center">
-                            <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-                          </div>
-                          <div className="font-bold text-xl text-white mb-2">
-                            Learning and Growth
-                          </div>
-                          <p className="text-gray-300">
-                            Dove deep into JavaScript and modern frameworks like
-                            React. Participated in coding bootcamps and online
-                            courses to strengthen my foundation.
-                          </p>
-                        </div>
+                        <div className="space-y-12 relative">
+                          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-cyan-500 via-amber-500 to-emerald-500"></div>
 
-                        <div className="relative pl-12">
-                          <div className="absolute left-0 w-8 h-8 rounded-full bg-emerald-500/20 border-2 border-emerald-500 flex items-center justify-center">
-                            <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                          </div>
-                          <div className="font-bold text-xl text-white mb-2">
-                            Current Chapter
-                          </div>
-                          <p className="text-gray-300">
-                            Currently doing my OJT, applying my skills in
-                            real-world projects and continuing to learn new
-                            technologies and best practices.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="expertise" className="mt-0">
-                  <div className="bg-black/40 backdrop-blur-xl border border-gray-800 rounded-2xl overflow-hidden">
-                    <div className="p-8">
-                      <div className="flex items-center gap-3 mb-8">
-                        <div className="p-2 rounded-lg bg-amber-500/20">
-                          <Icons.Code className="w-6 h-6 text-amber-400" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-white">
-                          Technical Skills
-                        </h3>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-6">
-                          <div>
-                            <h4 className="font-bold text-xl mb-4 text-white">
-                              Frontend Development
-                            </h4>
-                            <div className="flex flex-wrap gap-2">
-                              {[
-                                "React",
-                                "JavaScript",
-                                "HTML5",
-                                "CSS3",
-                                "Tailwind CSS",
-                                "Redux",
-                              ].map((skill) => (
-                                <Badge
-                                  key={skill}
-                                  className="bg-gradient-to-r from-amber-500 to-amber-600 text-white py-1.5 px-3"
-                                >
-                                  {skill}
-                                </Badge>
-                              ))}
+                          <div className="relative pl-12">
+                            <div className="absolute left-0 w-8 h-8 rounded-full bg-cyan-500/20 border-2 border-cyan-500 flex items-center justify-center">
+                              <div className="w-2 h-2 rounded-full bg-cyan-500"></div>
                             </div>
-                          </div>
-
-                          <div>
-                            <h4 className="font-bold text-xl mb-4 text-white">
-                              Tools & Technologies
-                            </h4>
-                            <div className="flex flex-wrap gap-2">
-                              {[
-                                "Git",
-                                "VS Code",
-                                "Figma",
-                                "npm",
-                                "Webpack",
-                                "REST APIs",
-                              ].map((tool) => (
-                                <Badge
-                                  key={tool}
-                                  className="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white py-1.5 px-3"
-                                >
-                                  {tool}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="bg-gradient-to-br from-amber-500/10 to-cyan-500/10 rounded-xl p-6 border border-white/10">
-                          <h4 className="font-bold text-xl mb-4 text-white">
-                            My Approach
-                          </h4>
-                          <ul className="space-y-3 text-gray-300">
-                            <li className="flex items-start gap-2">
-                              <div className="mt-1 w-2 h-2 rounded-full bg-amber-500"></div>
-                              <span>
-                                Focus on clean, maintainable code architecture
-                              </span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <div className="mt-1 w-2 h-2 rounded-full bg-amber-500"></div>
-                              <span>
-                                Prioritize responsive design and accessibility
-                              </span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <div className="mt-1 w-2 h-2 rounded-full bg-amber-500"></div>
-                              <span>
-                                Continuous learning and staying updated with
-                                latest trends
-                              </span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <div className="mt-1 w-2 h-2 rounded-full bg-amber-500"></div>
-                              <span>
-                                Collaborative problem-solving and team
-                                communication
-                              </span>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="education" className="mt-0">
-                  <div className="bg-black/40 backdrop-blur-xl border border-gray-800 rounded-2xl overflow-hidden">
-                    <div className="p-8">
-                      <div className="flex items-center gap-3 mb-8">
-                        <div className="p-2 rounded-lg bg-emerald-500/20">
-                          <Icons.GraduationCap className="w-6 h-6 text-emerald-400" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-white">
-                          Education
-                        </h3>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-8">
-                          <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-xl p-6 border border-emerald-500/20">
                             <div className="font-bold text-xl text-white mb-2">
-                              Bachelor of Science in Information Technology
-                            </div>
-                            <div className="text-emerald-400 font-medium mb-4">
-                              University of the East • 2020-2024
+                              Beginning of the Journey
                             </div>
                             <p className="text-gray-300">
-                              Focused on web development, software engineering,
-                              and database management systems.
+                              Started with HTML and CSS, building simple
+                              websites and discovering the joy of creating
+                              things for the web. My curiosity led me to explore
+                              more complex technologies and frameworks.
                             </p>
                           </div>
 
-                          <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-xl p-6 border border-emerald-500/20">
-                            <div className="font-bold text-xl text-white mb-2">
-                              Relevant Coursework
+                          <div className="relative pl-12">
+                            <div className="absolute left-0 w-8 h-8 rounded-full bg-amber-500/20 border-2 border-amber-500 flex items-center justify-center">
+                              <div className="w-2 h-2 rounded-full bg-amber-500"></div>
                             </div>
-                            <ul className="space-y-2 text-gray-300">
+                            <div className="font-bold text-xl text-white mb-2">
+                              Learning and Growth
+                            </div>
+                            <p className="text-gray-300">
+                              Dove deep into JavaScript and modern frameworks
+                              like React. Participated in coding bootcamps and
+                              online courses to strengthen my foundation.
+                            </p>
+                          </div>
+
+                          <div className="relative pl-12">
+                            <div className="absolute left-0 w-8 h-8 rounded-full bg-emerald-500/20 border-2 border-emerald-500 flex items-center justify-center">
+                              <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                            </div>
+                            <div className="font-bold text-xl text-white mb-2">
+                              Current Chapter
+                            </div>
+                            <p className="text-gray-300">
+                              Currently doing my OJT, applying my skills in
+                              real-world projects and continuing to learn new
+                              technologies and best practices.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Expertise Tab Content */}
+                {activeTab === "expertise" && (
+                  <div className="mt-0">
+                    <div className="bg-black/40 backdrop-blur-xl border border-gray-800 rounded-2xl overflow-hidden">
+                      <div className="p-8">
+                        <div className="flex items-center gap-3 mb-8">
+                          <div className="p-2 rounded-lg bg-amber-500/20">
+                            <Icons.Code className="w-6 h-6 text-amber-400" />
+                          </div>
+                          <h3 className="text-2xl font-bold text-white">
+                            Technical Skills
+                          </h3>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                          <div className="space-y-6">
+                            <div>
+                              <h4 className="font-bold text-xl mb-4 text-white">
+                                Frontend Development
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                {[
+                                  "React",
+                                  "JavaScript",
+                                  "HTML5",
+                                  "CSS3",
+                                  "Tailwind CSS",
+                                  "Redux",
+                                ].map((skill) => (
+                                  <Badge
+                                    key={skill}
+                                    className="bg-gradient-to-r from-amber-500 to-amber-600 text-white py-1.5 px-3"
+                                  >
+                                    {skill}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div>
+                              <h4 className="font-bold text-xl mb-4 text-white">
+                                Tools & Technologies
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                {[
+                                  "Git",
+                                  "VS Code",
+                                  "Figma",
+                                  "npm",
+                                  "Webpack",
+                                  "REST APIs",
+                                ].map((tool) => (
+                                  <Badge
+                                    key={tool}
+                                    className="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white py-1.5 px-3"
+                                  >
+                                    {tool}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-gradient-to-br from-amber-500/10 to-cyan-500/10 rounded-xl p-6 border border-white/10">
+                            <h4 className="font-bold text-xl mb-4 text-white">
+                              My Approach
+                            </h4>
+                            <ul className="space-y-3 text-gray-300">
                               <li className="flex items-start gap-2">
-                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                                <span>Web Development</span>
+                                <div className="mt-1 w-2 h-2 rounded-full bg-amber-500"></div>
+                                <span>
+                                  Focus on clean, maintainable code architecture
+                                </span>
                               </li>
                               <li className="flex items-start gap-2">
-                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                                <span>Database Management</span>
+                                <div className="mt-1 w-2 h-2 rounded-full bg-amber-500"></div>
+                                <span>
+                                  Prioritize responsive design and accessibility
+                                </span>
                               </li>
                               <li className="flex items-start gap-2">
-                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                                <span>Software Engineering</span>
+                                <div className="mt-1 w-2 h-2 rounded-full bg-amber-500"></div>
+                                <span>
+                                  Continuous learning and staying updated with
+                                  latest trends
+                                </span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <div className="mt-1 w-2 h-2 rounded-full bg-amber-500"></div>
+                                <span>
+                                  Collaborative problem-solving and team
+                                  communication
+                                </span>
                               </li>
                             </ul>
                           </div>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
-                        <div className="relative">
-                          <div className="absolute inset-0 bg-emerald-500/5 rounded-xl blur-xl"></div>
-                          <div className="relative bg-black/40 backdrop-blur-xl rounded-xl p-6 h-full border border-white/10">
-                            <h4 className="font-bold text-xl mb-6 text-white">
-                              Additional Learning
-                            </h4>
-                            <div className="space-y-6">
-                              <div>
-                                <div className="font-medium text-emerald-400 mb-1">
-                                  Online Courses & Certifications
-                                </div>
-                                <p className="text-gray-300">
-                                  Continuously expanding my knowledge through
-                                  platforms like Udemy, Coursera, and
-                                  freeCodeCamp.
-                                </p>
+                {/* Education Tab Content */}
+                {activeTab === "education" && (
+                  <div className="mt-0">
+                    <div className="bg-black/40 backdrop-blur-xl border border-gray-800 rounded-2xl overflow-hidden">
+                      <div className="p-8">
+                        <div className="flex items-center gap-3 mb-8">
+                          <div className="p-2 rounded-lg bg-emerald-500/20">
+                            <Icons.GraduationCap className="w-6 h-6 text-emerald-400" />
+                          </div>
+                          <h3 className="text-2xl font-bold text-white">
+                            Education
+                          </h3>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                          <div className="space-y-8">
+                            <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-xl p-6 border border-emerald-500/20">
+                              <div className="font-bold text-xl text-white mb-2">
+                                Bachelor of Science in Information Technology
                               </div>
-                              <div>
-                                <div className="font-medium text-emerald-400 mb-1">
-                                  Self-Directed Learning
-                                </div>
-                                <p className="text-gray-300">
-                                  Regularly exploring new technologies and
-                                  frameworks through documentation, tutorials,
-                                  and building personal projects.
-                                </p>
+                              <div className="text-emerald-400 font-medium mb-4">
+                                University of the East • 2020-2024
                               </div>
-                              <div>
-                                <div className="font-medium text-emerald-400 mb-1">
-                                  Tech Community Involvement
+                              <p className="text-gray-300">
+                                Focused on web development, software
+                                engineering, and database management systems.
+                              </p>
+                            </div>
+
+                            <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-xl p-6 border border-emerald-500/20">
+                              <div className="font-bold text-xl text-white mb-2">
+                                Relevant Coursework
+                              </div>
+                              <ul className="space-y-2 text-gray-300">
+                                <li className="flex items-start gap-2">
+                                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                                  <span>Web Development</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                                  <span>Database Management</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                                  <span>Software Engineering</span>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+
+                          <div className="relative">
+                            <div className="absolute inset-0 bg-emerald-500/5 rounded-xl blur-xl"></div>
+                            <div className="relative bg-black/40 backdrop-blur-xl rounded-xl p-6 h-full border border-white/10">
+                              <h4 className="font-bold text-xl mb-6 text-white">
+                                Additional Learning
+                              </h4>
+                              <div className="space-y-6">
+                                <div>
+                                  <div className="font-medium text-emerald-400 mb-1">
+                                    Online Courses & Certifications
+                                  </div>
+                                  <p className="text-gray-300">
+                                    Continuously expanding my knowledge through
+                                    platforms like Udemy, Coursera, and
+                                    freeCodeCamp.
+                                  </p>
                                 </div>
-                                <p className="text-gray-300">
-                                  Participating in coding meetups, hackathons,
-                                  and online developer communities to learn from
-                                  peers.
-                                </p>
+                                <div>
+                                  <div className="font-medium text-emerald-400 mb-1">
+                                    Self-Directed Learning
+                                  </div>
+                                  <p className="text-gray-300">
+                                    Regularly exploring new technologies and
+                                    frameworks through documentation, tutorials,
+                                    and building personal projects.
+                                  </p>
+                                </div>
+                                <div>
+                                  <div className="font-medium text-emerald-400 mb-1">
+                                    Tech Community Involvement
+                                  </div>
+                                  <p className="text-gray-300">
+                                    Participating in coding meetups, hackathons,
+                                    and online developer communities to learn
+                                    from peers.
+                                  </p>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -848,92 +823,97 @@ const About = () => {
                       </div>
                     </div>
                   </div>
-                </TabsContent>
+                )}
 
-                <TabsContent value="personal" className="mt-0">
-                  <div className="bg-black/40 backdrop-blur-xl border border-gray-800 rounded-2xl overflow-hidden">
-                    <div className="p-8">
-                      <div className="flex items-center gap-3 mb-8">
-                        <div className="p-2 rounded-lg bg-rose-500/20">
-                          <Icons.Heart className="w-6 h-6 text-rose-400" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-white">
-                          Personal Interests
-                        </h3>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="bg-gradient-to-br from-rose-500/10 to-rose-500/5 rounded-xl p-6 border border-rose-500/20">
-                          <h4 className="font-bold text-xl mb-4 text-white">
-                            Hobbies
-                          </h4>
-                          <div className="flex flex-wrap gap-2">
-                            {[
-                              "Basketball",
-                              "Travel",
-                              "Alfonso Light",
-                              "Gaming",
-                              "Music",
-                            ].map((hobby) => (
-                              <Badge
-                                key={hobby}
-                                className="bg-gradient-to-r from-rose-500 to-rose-600 text-white py-1.5 px-3"
-                              >
-                                {hobby}
-                              </Badge>
-                            ))}
+                {/* Personal Tab Content */}
+                {activeTab === "personal" && (
+                  <div className="mt-0">
+                    <div className="bg-black/40 backdrop-blur-xl border border-gray-800 rounded-2xl overflow-hidden">
+                      <div className="p-8">
+                        <div className="flex items-center gap-3 mb-8">
+                          <div className="p-2 rounded-lg bg-rose-500/20">
+                            <Icons.Heart className="w-6 h-6 text-rose-400" />
                           </div>
+                          <h3 className="text-2xl font-bold text-white">
+                            Personal Interests
+                          </h3>
                         </div>
 
-                        <div className="bg-gradient-to-br from-rose-500/10 to-rose-500/5 rounded-xl p-6 border border-rose-500/20">
-                          <h4 className="font-bold text-xl mb-4 text-white">
-                            Fun Facts
-                          </h4>
-                          <ul className="space-y-3 text-gray-300">
-                            <li className="flex items-start gap-2">
-                              <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-500"></div>
-                              <span>Enjoys watching movies</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-500"></div>
-                              <span>
-                                Particularly enjoys strategy and RPG games
-                              </span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-500"></div>
-                              <span>Preparing to be an NBA Player</span>
-                            </li>
-                          </ul>
-                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                          <div className="bg-gradient-to-br from-rose-500/10 to-rose-500/5 rounded-xl p-6 border border-rose-500/20">
+                            <h4 className="font-bold text-xl mb-4 text-white">
+                              Hobbies
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                              {[
+                                "Basketball",
+                                "Travel",
+                                "Alfonso Light",
+                                "Gaming",
+                                "Music",
+                              ].map((hobby) => (
+                                <Badge
+                                  key={hobby}
+                                  className="bg-gradient-to-r from-rose-500 to-rose-600 text-white py-1.5 px-3"
+                                >
+                                  {hobby}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
 
-                        <div className="bg-gradient-to-br from-rose-500/10 to-rose-500/5 rounded-xl p-6 border border-rose-500/20">
-                          <h4 className="font-bold text-xl mb-4 text-white">
-                            Goals
-                          </h4>
-                          <ul className="space-y-3 text-gray-300">
-                            <li className="flex items-start gap-2">
-                              <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-500"></div>
-                              <span>Contribute to open-source projects</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-500"></div>
-                              <span>
-                                Learn a new programming language every year
-                              </span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-500"></div>
-                              <span>Attend international tech conferences</span>
-                            </li>
-                          </ul>
+                          <div className="bg-gradient-to-br from-rose-500/10 to-rose-500/5 rounded-xl p-6 border border-rose-500/20">
+                            <h4 className="font-bold text-xl mb-4 text-white">
+                              Fun Facts
+                            </h4>
+                            <ul className="space-y-3 text-gray-300">
+                              <li className="flex items-start gap-2">
+                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-500"></div>
+                                <span>Enjoys watching movies</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-500"></div>
+                                <span>
+                                  Particularly enjoys strategy and RPG games
+                                </span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-500"></div>
+                                <span>Preparing to be an NBA Player</span>
+                              </li>
+                            </ul>
+                          </div>
+
+                          <div className="bg-gradient-to-br from-rose-500/10 to-rose-500/5 rounded-xl p-6 border border-rose-500/20">
+                            <h4 className="font-bold text-xl mb-4 text-white">
+                              Goals
+                            </h4>
+                            <ul className="space-y-3 text-gray-300">
+                              <li className="flex items-start gap-2">
+                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-500"></div>
+                                <span>Contribute to open-source projects</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-500"></div>
+                                <span>
+                                  Learn a new programming language every year
+                                </span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-500"></div>
+                                <span>
+                                  Attend international tech conferences
+                                </span>
+                              </li>
+                            </ul>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </TabsContent>
+                )}
               </div>
-            </Tabs>
+            </div>
           </Section>
         </div>
       </div>
